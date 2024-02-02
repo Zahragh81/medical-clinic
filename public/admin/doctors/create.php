@@ -63,6 +63,10 @@ include_once "../master/header.php";
                     </select>
                 </div>
                 <div class="col-6">
+                    <label for="mobile">موبایل</label>
+                    <input type="text" name="mobile" id="mobile" class="form-control" />
+                </div>
+                <div class="col-6">
                     <label for="medical_code">کدنظام پزشکی</label>
                     <input type="text" name="medical_code" id="medical_code" class="form-control" />
                 </div>

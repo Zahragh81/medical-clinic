@@ -7,49 +7,64 @@ include_once "../master/header.php";
     include_once "../master/sidebar.php";
     ?>
 </aside>
-
+<?php
+require_once "../../../database/connection.php";
+$conn = new mysqli('localhost', 'root', '', 'medical-clinic-appointments');
+if ($conn->connect_error) {
+    // die('Connection Failed: ' . $conn->connect_error);
+} else {
+    $id = $_GET['id'];
+    $query = 'SELECT * FROM policlinics WHERE id = ?';
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('i', $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $policlinic = $result->fetch_assoc();
+    $stmt->close();
+}
+?>
 <?php
 require_once "../../../database/connection.php";
 $conn = new mysqli('localhost', 'root', '', 'medical-clinic-appointments');
 if ($conn->connect_error) {
     die('Connection Failed: ' . $conn->connect_error);
 } else {
-    if (isset($_GET['id'])) {
-        $id = $_GET['id'];
-        $query = 'SELECT * FROM policlinics WHERE id = ?';
-        $stmt = $conn->prepare($query);
-        $stmt->bind_param('i', $id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $policlinics = $result->fetch_assoc();
-        $stmt->close();
-    } else {
-        echo "خطا: شناسه رکورد مشخص نشده است.";
-        exit;
-    }
-}
-
-if (isset($_POST['update'])) {
-    $name = $_POST["name"];
-    $phone = $_POST["phone"];
-    $clinic_id = $_POST["clinic_id"];
-    $doctor_id = $_POST["doctor_id"];
-    $secretary_id = $_POST["secretary_id"];
-    $sql = "UPDATE policlinics SET name=?,phone=?, clinic_id=?, doctor_id=? , secretary_id=? WHERE id=?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssiii", $name, $phone, $clinic_id, $doctor_id, $secretary_id);
-
-    if ($stmt->execute()) {
-        echo "رکورد با موفقیت بهروز شد.";
-    } else {
-        echo "خطا در بهروزرسانی رکورد: " . $stmt->error;
-    }
-
+    $query = 'select * from clinics';
+    $stmt = $conn->prepare($query);
+    $stmt->execute();
+    $clinics = $stmt->get_result();
     $stmt->close();
+    $conn->close();
 }
-$conn->close();
 ?>
-
+<?php
+require_once "../../../database/connection.php";
+$conn = new mysqli('localhost', 'root', '', 'medical-clinic-appointments');
+if ($conn->connect_error) {
+    die('Connection Failed: ' . $conn->connect_error);
+} else {
+    $query = 'select * from users where user_type_id=2';
+    $stmt = $conn->prepare($query);
+    $stmt->execute();
+    $doctors = $stmt->get_result();
+    $stmt->close();
+    $conn->close();
+}
+?>
+<?php
+require_once "../../../database/connection.php";
+$conn = new mysqli('localhost', 'root', '', 'medical-clinic-appointments');
+if ($conn->connect_error) {
+    die('Connection Failed: ' . $conn->connect_error);
+} else {
+    $query = 'select * from users where user_type_id=3';
+    $stmt = $conn->prepare($query);
+    $stmt->execute();
+    $secretaries = $stmt->get_result();
+    $stmt->close();
+    $conn->close();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -59,36 +74,48 @@ $conn->close();
     <title>ویرایش رکورد در MySQL Database</title>
 </head>
 
+
 <body>
     <div class="container">
-        <form action="update.php?id=<?php echo $id; ?>" method="POST">
-            <input type="hidden" name="id" value="<?php echo $policlinics["id"]; ?>">
+        <form action="update.php" method="POST">
+            <input type="hidden" name="id" id="id" value="<?php echo $policlinic["id"]; ?>">
             <div class="row small">
-                <div class="col-6">
+                <div class="col-6 ">
                     <label for="name">نام</label>
-                    <input type="text" name="name" value="<?php echo $policlinics["name"]; ?>" class="form-control" />
+                    <input type="text" name="name" id="name" value="<?php echo $policlinic["name"]; ?>" class="form-control" />
                 </div>
                 <div class="col-6">
                     <label for="phone">تلفن</label>
-                    <input type="text" name="phone" value="<?php echo $policlinics["phone"]; ?>" class="form-control" />
+                    <input type="text" name="phone" id="phone" value="<?php echo $policlinic["phone"]; ?>" class="form-control" />
                 </div>
                 <div class="col-6">
                     <label for="clinic_id">کلینیک</label>
-                    <input type="text" name="clinic_id" value="<?php echo $policlinics["clinic_id"]; ?>" class="form-control" />
+                    <select name="clinic_id" id="clinic_id" class="form-select">
+                        <?php foreach ($clinics as $clinic) { ?>
+                            <option value="<?= $clinic['id'] ?>"><?= $clinic['name'] ?></option>
+                        <?php } ?>
+                    </select>
                 </div>
                 <div class="col-6">
                     <label for="doctor_id">پزشکان</label>
-                    <input type="text" name="doctor_id" value="<?php echo $policlinics["doctor_id"]; ?>" class="form-control" />
+                    <select name="doctor_id" id="doctor_id" class="form-select">
+                        <?php foreach ($doctors as $doctor) { ?>
+                            <option value="<?= $doctor['id'] ?>"><?= $doctor['fullname'] ?></option>
+                        <?php } ?>
+                    </select>
                 </div>
                 <div class="col-6">
                     <label for="secretary_id">منشی ها</label>
-                    <input type="text" name="secretary_id" value="<?php echo $policlinics["secretary_id"]; ?>" class="form-control" />
+                    <select name="secretary_id" id="secretary_id" class="form-select">
+                        <?php foreach ($secretaries as $secretary) { ?>
+                            <option value="<?= $secretary['id'] ?>"><?= $secretary['fullname'] ?></option>
+                        <?php } ?>
+                    </select>
                 </div>
             </div>
             <div class="row small">
                 <div>
-                    <a href="update.php" type="submit" name="update" class="btn btn-primary small mt-3">ویرایش تغییرات</a>
-                    <!-- <input type="submit" name="update" value="ویرایش تغییرات" class="btn btn-primary small mt-3"> -->
+                    <input type="submit" value="ثبت" class="btn btn-secondary small mt-3">
                 </div>
             </div>
         </form>

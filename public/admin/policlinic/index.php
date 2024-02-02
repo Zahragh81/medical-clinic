@@ -57,9 +57,63 @@ include_once "../master/header.php";
                         <td><?php echo $policlinic["id"] ?></td>
                         <td><?php echo $policlinic["name"] ?></td>
                         <td><?php echo $policlinic["phone"] ?></td>
-                        <td><?php echo $policlinic["clinic_id"] ?></td>
-                        <td><?php echo $policlinic["doctor_id"] ?></td>
-                        <td><?php echo $policlinic["secretary_id"] ?></td>
+                        <td>
+                            <?php
+                            require_once "../../../database/connection.php";
+                            $conn = new mysqli('localhost', 'root', '', 'medical-clinic-appointments');
+                            if ($conn->connect_error) {
+                                die('Connection Failed: ' . $conn->connect_error);
+                            } else {
+                                $query = 'SELECT name FROM clinics WHERE id = ?';
+                                $stmt = $conn->prepare($query);
+                                $stmt->bind_param('i', $policlinic["clinic_id"]);
+                                $stmt->execute();
+                                $result = $stmt->get_result();
+                                $clinic = $result->fetch_assoc();
+                                $stmt->close();
+                                $conn->close();
+                            }
+                            echo $clinic['name'];
+                            ?>
+                        </td>
+                        <td>
+                            <?php
+                            require_once "../../../database/connection.php";
+                            $conn = new mysqli('localhost', 'root', '', 'medical-clinic-appointments');
+                            if ($conn->connect_error) {
+                                die('Connection Failed: ' . $conn->connect_error);
+                            } else {
+                                $query = 'SELECT fullname FROM users WHERE id = ? and user_type_id=2';
+                                $stmt = $conn->prepare($query);
+                                $stmt->bind_param('i', $policlinic["doctor_id"]);
+                                $stmt->execute();
+                                $result = $stmt->get_result();
+                                $doctor = $result->fetch_assoc();
+                                $stmt->close();
+                                $conn->close();
+                            }
+                            echo $doctor['fullname'];
+                            ?>
+                        </td>
+                        <td>
+                            <?php
+                            require_once "../../../database/connection.php";
+                            $conn = new mysqli('localhost', 'root', '', 'medical-clinic-appointments');
+                            if ($conn->connect_error) {
+                                die('Connection Failed: ' . $conn->connect_error);
+                            } else {
+                                $query = 'SELECT fullname FROM users WHERE id = ? and user_type_id=3';
+                                $stmt = $conn->prepare($query);
+                                $stmt->bind_param('i', $policlinic["secretary_id"]);
+                                $stmt->execute();
+                                $result = $stmt->get_result();
+                                $secretary = $result->fetch_assoc();
+                                $stmt->close();
+                                $conn->close();
+                            }
+                            echo $secretary['fullname'];
+                            ?>
+                        </td>
                         <td>
                             <a class="btn btn-warning" href="edit.php?id=<?php echo $policlinic['id']; ?>">ویرایش</a>
                             <a class="btn btn-secondary delete-btn" href="#" data-id="<?php echo $policlinic['id']; ?>">حذف</a>

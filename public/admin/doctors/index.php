@@ -4,7 +4,7 @@ $conn = new mysqli('localhost', 'root', '', 'medical-clinic-appointments');
 if ($conn->connect_error) {
     // die('Connection FAiled :' . $conn->connect_error);
 } else {
-    $query = 'select * from users';
+    $query = 'select * from users where user_type_id = 2';
     $stmt = $conn->prepare($query);
     $stmt->execute();
     $doctors = $stmt->get_result();
@@ -46,23 +46,25 @@ include_once "../master/header.php";
                     <th> نام و نام خانوادگی</th>
                     <th>عکس</th>
                     <th>وضعیت</th>
+                    <th>موبایل</th>
                     <th>کدنظام پزشکی</th>
                     <th>عملیات</th>
                 </tr>
             </thead>
             <tbody>
                 <?php
-                foreach ($doctors as $users) { ?>
+                foreach ($doctors as $doctor) { ?>
                     <tr>
-                        <td><?php echo $users["id"] ?></td>
-                        <td><?php echo $users["username"] ?></td>
-                        <td><?php echo $users["fullname"] ?></td>
-                        <td><?php echo $users["avatar"] ?></td>
-                        <td><?php echo $users["status"] ?></td>
-                        <td><?php echo $users["medical_code"] ?></td>
+                        <td><?php echo $doctor["id"] ?></td>
+                        <td><?php echo $doctor["username"] ?></td>
+                        <td><?php echo $doctor["fullname"] ?></td>
+                        <td><?php echo $doctor["avatar"] ?></td>
+                        <td><?= $doctor['status'] ? 'فعال' : 'غیرفعال' ?></td>
+                        <td><?php echo $doctor["mobile"] ?></td>
+                        <td><?php echo $doctor["medical_code"] ?></td>
                         <td>
-                            <a class="btn btn-warning" href="#">ویرایش</a>
-                            <a class="btn btn-secondary" href="#">حذف</a>
+                            <a class="btn btn-warning" href="edit.php?id=<?php echo $doctor['id']; ?>">ویرایش</a>
+                            <a class="btn btn-secondary delete-btn" href="#" data-id="<?php echo $doctor['id']; ?>">حذف</a>
                         </td>
                     </tr>
                 <?php
@@ -71,9 +73,33 @@ include_once "../master/header.php";
             </tbody>
         </table>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $(".delete-btn").on("click", function() {
+                var recordId = $(this).data("id");
+
+                $.ajax({
+                    type: "GET",
+                    url: "delete.php",
+                    data: {
+                        id: recordId
+                    },
+                    success: function(response) {
+                        alert(response);
+                        location.reload();
+                    },
+                    error: function() {
+                        alert("خطا در ارسال درخواست.");
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>
+
 
 
 <?php

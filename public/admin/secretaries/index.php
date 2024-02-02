@@ -4,10 +4,10 @@ $conn = new mysqli('localhost', 'root', '', 'medical-clinic-appointments');
 if ($conn->connect_error) {
     // die('Connection FAiled :' . $conn->connect_error);
 } else {
-    $query = 'select * from users';
+    $query = 'select * from users where user_type_id = 3';
     $stmt = $conn->prepare($query);
     $stmt->execute();
-    $user = $stmt->get_result();
+    $secretaries = $stmt->get_result();
     $stmt->close();
     $conn->close();
 } ?>
@@ -53,18 +53,18 @@ include_once "../master/header.php";
             </thead>
             <tbody>
                 <?php
-                foreach ($user as $users) { ?>
+                foreach ($secretaries as $secretary) { ?>
                     <tr>
-                        <td><?php echo $users["id"] ?></td>
-                        <td><?php echo $users["username"] ?></td>
-                        <td><?php echo $users["fullname"] ?></td>
-                        <td><?php echo $users["avatar"] ?></td>
-                        <td><?php echo $users["status"] ?></td>
-                        <td><?php echo $users["mobile"] ?></td>
-                        <td><?php echo $users["address"] ?></td>
+                        <td><?php echo $secretary["id"] ?></td>
+                        <td><?php echo $secretary["username"] ?></td>
+                        <td><?php echo $secretary["fullname"] ?></td>
+                        <td><?php echo $secretary["avatar"] ?></td>
+                        <td><?= $secretary['status'] ? 'فعال' : 'غیرفعال' ?></td>
+                        <td><?php echo $secretary["mobile"] ?></td>
+                        <td><?php echo $secretary["address"] ?></td>
                         <td>
-                            <a class="btn btn-warning" href="#">ویرایش</a>
-                            <a class="btn btn-secondary" href="#">حذف</a>
+                            <a class="btn btn-warning" href="edit.php?id=<?php echo $secretary['id']; ?>">ویرایش</a>
+                            <a class="btn btn-secondary delete-btn" href="#" data-id="<?php echo $secretary['id']; ?>">حذف</a>
                         </td>
                     </tr>
                 <?php
@@ -73,9 +73,33 @@ include_once "../master/header.php";
             </tbody>
         </table>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $(".delete-btn").on("click", function() {
+                var recordId = $(this).data("id");
+
+                $.ajax({
+                    type: "GET",
+                    url: "delete.php",
+                    data: {
+                        id: recordId
+                    },
+                    success: function(response) {
+                        alert(response);
+                        location.reload();
+                    },
+                    error: function() {
+                        alert("خطا در ارسال درخواست.");
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>
+
 
 
 <?php

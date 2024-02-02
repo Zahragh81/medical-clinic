@@ -11,24 +11,6 @@ if ($conn->connect_error) {
     $stmt->close();
     $conn->close();
 }
-
-include_once "../master/header.php";
-?>
-<?php
-require_once "../../../database/connection.php";
-$conn = new mysqli('localhost', 'root', '', 'medical-clinic-appointments');
-if ($conn->connect_error) {
-    die('Connection Failed: ' . $conn->connect_error);
-} else {
-    $query = 'select * from users where user_type_id=1';
-    $stmt = $conn->prepare($query);
-    $stmt->execute();
-    $users = $stmt->get_result();
-    $stmt->close();
-    $conn->close();
-}
-?>
-<?php
 include_once "../master/header.php";
 ?>
 
@@ -37,53 +19,54 @@ include_once "../master/header.php";
     include_once "../master/sidebar.php";
     ?>
 </aside>
-<style>
-    .container {
-        background-color: #dcdcdc;
-        height: 500px;
-        padding-top: 30px;
-    }
-</style>
+
+
+<?php
+require_once "../../../database/connection.php";
+$conn = new mysqli('localhost', 'root', '', 'medical-clinic-appointments');
+if ($conn->connect_error) {
+    // die('Connection Failed: ' . $conn->connect_error);
+} else {
+    $id = $_GET['id'];
+    $query = 'SELECT * FROM users WHERE id = ? ';
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('i', $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $user = $result->fetch_assoc();
+    $stmt->close();
+}
+
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $("#formValidation").submit(function(e) {
-                var username = $('#username').val().trim();
-                var fullname = $('#fullname').val().trim();
-                var medical_code = $('#medical_code').val().trim();
-                if (username === "" || fullname === "" || medical_code === "") {
-                    alert('واردکردن کدملی،نام ونام خانوادگی وکدنظام پزشکی الزامی است!');
-                    e.preventDefault();
-                }
-            });
-        });
-    </script>
+    <title>ویرایش رکورد در MySQL Database</title>
 </head>
 
-<body>
 
+<body>
     <div class="container">
-        <form action="store.php" method="POST" id="formValidation">
+        <form action="update.php" method="POST">
+            <input type="hidden" name="id" id="id" value="<?php echo $user["id"]; ?>">
             <div class="row small">
                 <div class="col-6 ">
                     <label for="username">کدملی</label>
-                    <input type="text" name="username" id="username" class="form-control" />
+                    <input type="text" name="username" id="username" value="<?php echo $user["username"]; ?>" class="form-control" />
                 </div>
                 <div class="col-6 ">
                     <label for="fullname">نام ونام خانوادگی</label>
-                    <input type="text" name="fullname" id="fullname" class="form-control" />
+                    <input type="text" name="fullname" id="fullname" value="<?php echo $user["fullname"]; ?>" class="form-control" />
                 </div>
                 <div class="col-6">
                     <label for="avatar">عکس</label>
-                    <input type="text" name="avatar" id="avatar" class="form-control" />
+                    <input type="text" name="avatar" id="avatar" value="<?php echo $user["avatar"]; ?>" class="form-control" />
                 </div>
                 <div class="col-6">
                     <label for="status">وضعیت</label>
@@ -95,19 +78,19 @@ include_once "../master/header.php";
                 </div>
                 <div class="col-6">
                     <label for="mobile">موبایل</label>
-                    <input type="text" name="mobile" id="mobile" class="form-control" />
+                    <input type="text" name="mobile" id="mobile" value="<?php echo $user["mobile"]; ?>" class="form-control" />
                 </div>
                 <div class="col-6">
                     <label for="address">ادرس</label>
-                    <input type="text" name="address" id="address" class="form-control" />
+                    <input type="text" name="address" id="address" value="<?php echo $user["address"]; ?>" class="form-control" />
                 </div>
                 <div class="col-6">
                     <label for="medical_code">کدنظام پزشکی</label>
-                    <input type="text" name="medical_code" id="medical_code" class="form-control" />
+                    <input type="text" name="medical_code" id="medical_code" value="<?php echo $user["medical_code"]; ?>" class="form-control" />
                 </div>
                 <div class="col-6">
                     <label for="birth_date">تاریخ تولد</label>
-                    <input type="text" name="birth_date" id="birth_date" class="form-control" />
+                    <input type="text" name="birth_date" id="birth_date" value="<?php echo $user["birth_date"]; ?>" class="form-control" />
                 </div>
                 <div class="col-6">
                     <label for="gender_id">جنسیت</label>
@@ -117,18 +100,17 @@ include_once "../master/header.php";
                         <?php } ?>
                     </select>
                 </div>
-            </div>
-            <div class="row small">
-                <div>
-                    <button class="btn btn-warning small mt-3">ثبت</button>
+                <div class="row small">
+                    <div>
+                        <input type="submit" value="ثبت" class="btn btn-secondary small mt-3">
+                    </div>
                 </div>
-            </div>
-            <div>
-                <a href="index.php" class="btn btn-secondary small mt-3">بازگشت</a>
-            </div>
         </form>
     </div>
+</body>
 
-    <?php
-    include_once "../master/footer.php";
-    ?>
+</html>
+
+<?php
+include_once "../master/footer.php";
+?>

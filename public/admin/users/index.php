@@ -7,7 +7,7 @@ if ($conn->connect_error) {
     $query = 'select * from users';
     $stmt = $conn->prepare($query);
     $stmt->execute();
-    $user = $stmt->get_result();
+    $users = $stmt->get_result();
     $stmt->close();
     $conn->close();
 } ?>
@@ -56,21 +56,39 @@ include_once "../master/header.php";
             </thead>
             <tbody>
                 <?php
-                foreach ($user as $users) { ?>
+                foreach ($users as $user) { ?>
                     <tr>
-                        <td><?php echo $users["id"] ?></td>
-                        <td><?php echo $users["username"] ?></td>
-                        <td><?php echo $users["fullname"] ?></td>
-                        <td><?php echo $users["avatar"] ?></td>
-                        <td><?php echo $users["status"] ?></td>
-                        <td><?php echo $users["mobile"] ?></td>
-                        <td><?php echo $users["address"] ?></td>
-                        <td><?php echo $users["medical_code"] ?></td>
-                        <td><?php echo $users["birth_date"] ?></td>
-                        <td><?php echo $users["gender_id"] ?></td>
+                        <td><?php echo $user["id"] ?></td>
+                        <td><?php echo $user["username"] ?></td>
+                        <td><?php echo $user["fullname"] ?></td>
+                        <td><?php echo $user["avatar"] ?></td>
+                        <td><?= $user['status'] ? 'فعال' : 'غیرفعال' ?></td>
+                        <td><?php echo $user["mobile"] ?></td>
+                        <td><?php echo $user["address"] ?></td>
+                        <td><?php echo $user["medical_code"] ?></td>
+                        <td><?php echo $user["birth_date"] ?></td>
                         <td>
-                            <a class="btn btn-warning" href="#">ویرایش</a>
-                            <a class="btn btn-secondary" href="#">حذف</a>
+                            <?php
+                            require_once "../../../database/connection.php";
+                            $conn = new mysqli('localhost', 'root', '', 'medical-clinic-appointments');
+                            if ($conn->connect_error) {
+                                die('Connection Failed: ' . $conn->connect_error);
+                            } else {
+                                $query = 'SELECT title FROM genders WHERE id = ?';
+                                $stmt = $conn->prepare($query);
+                                $stmt->bind_param('i', $user["gender_id"]);
+                                $stmt->execute();
+                                $result = $stmt->get_result();
+                                $gender = $result->fetch_assoc();
+                                $stmt->close();
+                                $conn->close();
+                            }
+                            echo $gender['title'] ?? 'نامشخص';
+                            ?>
+                        </td>
+                        <td>
+                            <a class="btn btn-warning" href="edit.php?id=<?php echo $user['id']; ?>">ویرایش</a>
+                            <a class="btn btn-secondary delete-btn" href="#" data-id="<?php echo $user['id']; ?>">حذف</a>
                         </td>
                     </tr>
                 <?php
@@ -79,6 +97,29 @@ include_once "../master/header.php";
             </tbody>
         </table>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $(".delete-btn").on("click", function() {
+                var recordId = $(this).data("id");
+
+                $.ajax({
+                    type: "GET",
+                    url: "delete.php",
+                    data: {
+                        id: recordId
+                    },
+                    success: function(response) {
+                        alert(response);
+                        location.reload();
+                    },
+                    error: function() {
+                        alert("خطا در ارسال درخواست.");
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>
