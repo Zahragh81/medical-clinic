@@ -7,13 +7,12 @@ if ($conn->connect_error) {
     $id = $_POST['id'];
     $username = $_POST["username"];
     $fullname = $_POST["fullname"];
-    $avatar = $_POST["avatar"];
     $status = $_POST["status"];
     $mobile = $_POST["mobile"];
     $address = $_POST["address"];
-    $sql = "UPDATE users SET username=?, fullname=?, avatar=? ,status=?,mobile=?,address=?  WHERE id=?";
+    $sql = "UPDATE users SET username=?, fullname=?, status=?,mobile=?,address=?  WHERE id=?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssissi", $username, $fullname, $avatar, $status, $mobile, $address, $id);
+    $stmt->bind_param("ssissi", $username, $fullname, $status, $mobile, $address, $id);
     $stmt->execute();
     $stmt->close();
     $conn->close();

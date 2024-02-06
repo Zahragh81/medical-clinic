@@ -44,7 +44,6 @@ include_once "../master/header.php";
                     <th>شناسه</th>
                     <th>کدملی</th>
                     <th> نام و نام خانوادگی</th>
-                    <th>عکس</th>
                     <th>وضعیت</th>
                     <th>موبایل</th>
                     <th>ادرس</th>
@@ -61,7 +60,6 @@ include_once "../master/header.php";
                         <td><?php echo $user["id"] ?></td>
                         <td><?php echo $user["username"] ?></td>
                         <td><?php echo $user["fullname"] ?></td>
-                        <td><?php echo $user["avatar"] ?></td>
                         <td><?= $user['status'] ? 'فعال' : 'غیرفعال' ?></td>
                         <td><?php echo $user["mobile"] ?></td>
                         <td><?php echo $user["address"] ?></td>

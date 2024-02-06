@@ -44,7 +44,6 @@ include_once "../master/header.php";
                     <th>شناسه</th>
                     <th>کدملی</th>
                     <th> نام و نام خانوادگی</th>
-                    <th>عکس</th>
                     <th>وضعیت</th>
                     <th>موبایل</th>
                     <th>ادرس</th>
@@ -58,7 +57,6 @@ include_once "../master/header.php";
                         <td><?php echo $secretary["id"] ?></td>
                         <td><?php echo $secretary["username"] ?></td>
                         <td><?php echo $secretary["fullname"] ?></td>
-                        <td><?php echo $secretary["avatar"] ?></td>
                         <td><?= $secretary['status'] ? 'فعال' : 'غیرفعال' ?></td>
                         <td><?php echo $secretary["mobile"] ?></td>
                         <td><?php echo $secretary["address"] ?></td>

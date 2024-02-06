@@ -53,10 +53,6 @@ if ($conn->connect_error) {
                     <input type="text" name="fullname" id="fullname" value="<?php echo $secretary["fullname"]; ?>" class="form-control" />
                 </div>
                 <div class="col-6">
-                    <label for="avatar">عکس</label>
-                    <input type="text" name="avatar" id="avatar" value="<?php echo $secretary["avatar"]; ?>" class="form-control" />
-                </div>
-                <div class="col-6">
                     <label for="status">وضعیت</label>
                     <select name="status" id="status" class="form-select">
                         <?php $selected = ($user['status'] == 1) ? 'selected' : ''; ?>

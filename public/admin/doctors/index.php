@@ -42,9 +42,9 @@ include_once "../master/header.php";
             <thead>
                 <tr>
                     <th>شناسه</th>
+                    <th>عکس</th>
                     <th>کدملی</th>
                     <th> نام و نام خانوادگی</th>
-                    <th>عکس</th>
                     <th>وضعیت</th>
                     <th>موبایل</th>
                     <th>کدنظام پزشکی</th>
@@ -56,9 +56,17 @@ include_once "../master/header.php";
                 foreach ($doctors as $doctor) { ?>
                     <tr>
                         <td><?php echo $doctor["id"] ?></td>
+                        <td>
+                            <?php
+                            if ($doctor['avatar']) {
+                                echo '<img src="uploads/' . $doctor['avatar'] . '" alt="آواتار پزشک" width="50">';
+                            } else {
+                                echo '<img class="notification-img" src="../../assets/images/Untitled.png" alt="">';
+                            }
+                            ?>
+                        </td>
                         <td><?php echo $doctor["username"] ?></td>
                         <td><?php echo $doctor["fullname"] ?></td>
-                        <td><?php echo $doctor["avatar"] ?></td>
                         <td><?= $doctor['status'] ? 'فعال' : 'غیرفعال' ?></td>
                         <td><?php echo $doctor["mobile"] ?></td>
                         <td><?php echo $doctor["medical_code"] ?></td>

@@ -13,7 +13,6 @@
                     <i class="fas fa-bars"></i>
                     <span>مدیریت مطب</span>
                 </a>
-
                 <section class="sidebar-group-link">
                     <section class="sidebar-dropdown-toggle">
                         <i class="fas fa-users icon"></i>

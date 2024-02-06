@@ -117,6 +117,8 @@ include_once "../master/header.php";
                         <td>
                             <a class="btn btn-warning" href="edit.php?id=<?php echo $policlinic['id']; ?>">ویرایش</a>
                             <a class="btn btn-secondary delete-btn" href="#" data-id="<?php echo $policlinic['id']; ?>">حذف</a>
+                            <a class="btn btn-warning" href="../calendar/index.php">تقویم</a>
+                            <a class="btn btn-secondary" href="../turns/index.php?policlinic_id=<?php echo $policlinic['id']; ?>">نوبت ها</a>
                         </td>
                     </tr>
                 <?php

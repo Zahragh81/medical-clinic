@@ -44,6 +44,10 @@ if ($conn->connect_error) {
         <form action="update.php" method="POST">
             <input type="hidden" name="id" id="id" value="<?php echo $doctor["id"]; ?>">
             <div class="row small">
+                <div class="col-6 ">
+                    <label for="avatar">عکس</label>
+                    <input type="file" name="avatar" id="avatar" class="form-control" />
+                </div>
                 <div class="col-6">
                     <label for="username">کدملی</label>
                     <input type="text" name="username" id="username" value="<?php echo $doctor["username"]; ?>" class="form-control" />
@@ -51,10 +55,6 @@ if ($conn->connect_error) {
                 <div class="col-6">
                     <label for="fullname">نام ونام خانوادگی</label>
                     <input type="text" name="fullname" id="fullname" value="<?php echo $doctor["fullname"]; ?>" class="form-control" />
-                </div>
-                <div class="col-6">
-                    <label for="avatar">عکس</label>
-                    <input type="text" name="avatar" id="avatar" value="<?php echo $doctor["avatar"]; ?>" class="form-control" />
                 </div>
                 <div class="col-6">
                     <label for="status">وضعیت</label>
@@ -75,7 +75,8 @@ if ($conn->connect_error) {
                 </div>
                 <div class="row small">
                     <div>
-                        <input type="submit" value="ثبت" class="btn btn-secondary small mt-3">
+                        <input class="btn btn-warning small mt-3" type="submit" value="ثبت" name="submit">
+                        <!-- <input type="submit" value="ثبت" class="btn btn-secondary small mt-3"> -->
                     </div>
                 </div>
         </form>

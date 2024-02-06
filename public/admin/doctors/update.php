@@ -5,15 +5,15 @@ if ($conn->connect_error) {
     die('Connection FAiled :' . $conn->connect_error);
 } else {
     $id = $_POST['id'];
+    $avatar = $_POST["avatar"];
     $username = $_POST["username"];
     $fullname = $_POST["fullname"];
-    $avatar = $_POST["avatar"];
     $status = $_POST["status"];
     $mobile = $_POST["mobile"];
     $medical_code = $_POST["medical_code"];
-    $sql = "UPDATE users SET username=?, fullname=?, avatar=? ,status=?,mobile=?,medical_code=?   WHERE id=?";
+    $sql = "UPDATE users SET avatar=?, username=?, fullname=?,status=?,mobile=?,medical_code=?  WHERE id=?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssissi", $username, $fullname, $avatar, $status, $mobile, $medical_code, $id);
+    $stmt->bind_param("sssissi", $avatar, $username, $fullname, $status, $mobile, $medical_code, $id);
     $stmt->execute();
     $stmt->close();
     $conn->close();

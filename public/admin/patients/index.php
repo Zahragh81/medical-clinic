@@ -42,9 +42,9 @@ include_once "../master/header.php";
             <thead>
                 <tr>
                     <th>شناسه</th>
+                    <th>عکس</th>
                     <th>کدملی</th>
                     <th> نام و نام خانوادگی</th>
-                    <th>عکس</th>
                     <th>وضعیت</th>
                     <th>موبایل</th>
                     <th>ادرس</th>
@@ -58,9 +58,17 @@ include_once "../master/header.php";
                 foreach ($users as $user) { ?>
                     <tr>
                         <td><?= $user["id"] ?></td>
+                        <td>
+                            <?php
+                            if ($user['avatar']) {
+                                echo '<img src="uploads/' . $user['avatar'] . '" alt="آواتار بیمار" width="50">';
+                            } else {
+                                echo '<img class="notification-img" src="../../assets/images/Untitled.png" alt="">';
+                            }
+                            ?>
+                        </td>
                         <td><?= $user["username"] ?></td>
                         <td><?= $user["fullname"] ?></td>
-                        <td><?= $user["avatar"] ?></td>
                         <td><?= $user['status'] ? 'فعال' : 'غیرفعال' ?></td>
                         <td><?= $user["mobile"] ?></td>
                         <td><?= $user["address"] ?></td>

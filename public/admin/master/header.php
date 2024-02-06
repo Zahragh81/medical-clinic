@@ -32,10 +32,9 @@
                             <input id="search-input" type="text" class="search-input">
                             <i class="fas fa-search pointer"></i>
                         </span>
-                        <i id="search-toggle" class="fas fa-search p-1 d-none d-md-inline pointer"></i>
                     </span>
 
-                    <span id="full-screen" class="pointer p-1 d-none d-md-inline mr-5">
+                    <span id="full-screen" class="pointer p-0 d-none d-md-inline mr-0">
                         <i id="screen-compress" class="fas fa-compress d-none"></i>
                         <i id="screen-expand" class="fas fa-expand "></i>
                     </span>

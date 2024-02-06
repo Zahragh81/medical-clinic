@@ -51,10 +51,6 @@ include_once "../master/header.php";
                     <input type="text" name="fullname" id="fullname" class="form-control" />
                 </div>
                 <div class="col-6">
-                    <label for="avatar">عکس</label>
-                    <input type="text" name="avatar" id="avatar" class="form-control" />
-                </div>
-                <div class="col-6">
                     <label for="status">وضعیت</label>
                     <select name="status" id="status" class="form-select">
                         <?php $selected = ($user['status'] == 1) ? 'selected' : ''; ?>

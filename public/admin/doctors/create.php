@@ -38,10 +38,27 @@ include_once "../master/header.php";
     </script>
 </head>
 
+<?php
+if (isset($_POST["submit"])) {
+    $dir = "uploads/";
+    $name = $_FILES["avatar"]["name"];
+    $check = move_uploaded_file($_FILES["avatar"]["tmp_name"], $dir . $name);
+    if ($check) {
+        echo "$name is uploaded";
+    } else {
+        echo "$name is not uploaded";
+    }
+}
+?>
+
 <body>
     <div class="container">
-        <form action="store.php" method="POST" id="formValidation">
+        <form action="store.php" method="POST" enctype="multipart/form-data" id="formValidation">
             <div class="row small">
+                <div class="col-6 ">
+                    <label for="avatar">عکس</label>
+                    <input type="file" name="avatar" id="avatar" class="form-control" />
+                </div>
                 <div class="col-6 ">
                     <label for="username">کدملی</label>
                     <input type="text" name="username" id="username" class="form-control" />
@@ -49,10 +66,6 @@ include_once "../master/header.php";
                 <div class="col-6 ">
                     <label for="fullname">نام ونام خانوادگی</label>
                     <input type="text" name="fullname" id="fullname" class="form-control" />
-                </div>
-                <div class="col-6">
-                    <label for="avatar">عکس</label>
-                    <input type="text" name="avatar" id="avatar" class="form-control" />
                 </div>
                 <div class="col-6">
                     <label for="status">وضعیت</label>
@@ -73,7 +86,7 @@ include_once "../master/header.php";
             </div>
             <div class="row small">
                 <div>
-                    <button class="btn btn-warning small mt-3">ثبت</button>
+                    <input class="btn btn-warning small mt-3" type="submit" value="ثبت" name="submit">
                 </div>
             </div>
             <div>
